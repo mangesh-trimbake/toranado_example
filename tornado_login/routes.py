@@ -1,13 +1,14 @@
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
+import tornado.template
 
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r"/", HomeHandler),
             (r"/login", LogInHandler),
-            (r"/singup", SingUpHandler),
+            (r"/signup", SingUpHandler),
         ]
         super(Application,self).__init__(handlers)
 
@@ -18,7 +19,36 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
         self.set_header('Access-Control-Allow-Methods', 'POST, GET')
 
-    
+class HomeHandler(BaseHandler):
+    def post(self):
+        print("Home page handler called")
+        self.set_default_headers()
+        # loader = tornado.template.Loader(".")
+        # self.write(loader.load("index.html").generate())
+        # self.render("index.html")
+
+
+class LogInHandler(BaseHandler):
+    def post(self):
+        print("LogIn api hit")
+        self.set_default_headers()
+        username = self.get_argument("user_name")
+        password = self.get_argument("password")
+        self.write(username+" "+password)
+
+
+
+class SingUpHandler(BaseHandler):
+    def post(self):
+        print("SignUp api hit")
+        self.set_default_headers()
+        username = self.get_argument("user_name")
+        password = self.get_argument("password")
+        
+        self.write(username+" "+password)
+
+
+
 
 if __name__ == "__main__":
     application = Application()
